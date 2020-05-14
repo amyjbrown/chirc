@@ -11,7 +11,7 @@ include_directories(src
     )
 
 add_executable(chirc
-    src/main.c
+    src/main.c 
     src/log.c)
 
 target_link_libraries(chirc pthread)

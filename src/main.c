@@ -46,26 +46,30 @@
 
 #include "log.h"
 
-
 int main(int argc, char *argv[])
 {
     int opt;
     char *port = NULL, *passwd = NULL, *servername = NULL, *network_file = NULL;
     int verbosity = 0;
 
+
     while ((opt = getopt(argc, argv, "p:o:s:n:vqh")) != -1)
         switch (opt)
         {
         case 'p':
+            // Get port number 
             port = strdup(optarg);
             break;
         case 'o':
+            // Get operator password, it is an error to ignore this
             passwd = strdup(optarg);
             break;
         case 's':
+            // Get server name
             servername = strdup(optarg);
             break;
         case 'n':
+            // Is not mentioned in file but may become used later for network files
             if (access(optarg, R_OK) == -1)
             {
                 printf("ERROR: No such file: %s\n", optarg);
@@ -74,26 +78,30 @@ int main(int argc, char *argv[])
             network_file = strdup(optarg);
             break;
         case 'v':
+            // Set verbosity to high, will print arguements `
             verbosity++;
             break;
         case 'q':
+            // No logging info will be shown
             verbosity = -1;
             break;
         case 'h':
+            // Show help info and exit
             printf("Usage: chirc -o OPER_PASSWD [-p PORT] [-s SERVERNAME] [-n NETWORK_FILE] [(-q|-v|-vv)]\n");
             exit(0);
             break;
         default:
+            // Error out on any other options
             fprintf(stderr, "ERROR: Unknown option -%c\n", opt);
             exit(-1);
         }
-
+    //Require operator password, will quit if missing
     if (!passwd)
     {
         fprintf(stderr, "ERROR: You must specify an operator password\n");
         exit(-1);
     }
-
+    // This is left unimplemented so far, but may be for later tasks
     if (network_file && !servername)
     {
         fprintf(stderr, "ERROR: If specifying a network file, you must also specify a server name.\n");

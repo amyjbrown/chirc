@@ -1,0 +1,47 @@
+Notes on IRC protocol format
+
+Message has
+    - an optional prefix starting with ":", and *no* space missing between it and prefix
+    If it is missing, then it is assumed the message originates from where the connection it came over
+    Client to server messages are not allowed to have any prefix but user nick
+
+    - The command name
+
+    - Parameters, of which there are up to 15
+    each parameter is seperated by a space " "(0x20)
+
+Provided ABNF
+    message    =  [ ":" prefix SPACE ] command [ params ] crlf
+    prefix     =  servername / ( nickname [ [ "!" user ] "@" host ] )
+    command    =  1*letter / 3digit
+    params     =  *14( SPACE middle ) [ SPACE ":" trailing ]
+               =/ 14( SPACE middle ) [ SPACE [ ":" ] trailing ]
+
+    nospcrlfcl =  %x01-09 / %x0B-0C / %x0E-1F / %x21-39 / %x3B-FF
+                    ; any octet except NUL, CR, LF, " " and ":"
+    middle     =  nospcrlfcl *( ":" / nospcrlfcl )
+    trailing   =  *( ":" / " " / nospcrlfcl )
+
+    SPACE      =  %x20        ; space character
+    crlf       =  %x0D %x0A   ; "carriage return" "linefeed"
+
+
+Implementation?
+
+char buf[512];
+int length=messagelength(buf);
+struct String=
+    length: int
+    char* source
+String 
+
+
+struct Message=
+    command : &char
+    prefix  : &char
+    paramc  : int
+    paramv  : [&char]
+
+fun makeMsg(s: -&char, out: +Message) Error
+
+
