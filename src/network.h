@@ -34,16 +34,15 @@ typedef struct {
     char* content; // Data
 } Buffer;
 
-
+// TCP create connections
 socket_t TCPServer(char* port);
 socket_t TCPConnection();
 
-bool TCPEnd(socket_t socket);
+// TCP sendall information
 bool TCPSend(socket_t socket, Buffer* message);
-// TODO : figure out interface for TCPRecv
-// bool TCPRecv(socket_t socket, Buffer* out, )
-/*
-extern ssize_t send(int socket, const void *buffer, size_t length, int flags);
-extern ssize_t recv(int socket, void *buffer, size_t length, int flags);
-*/
+
+//Convnience access to various standard functions
+extern ssize_t recv(int s, void *buf, size_t len, int flags);
+extern ssize_t send(int s, const void *buf, size_t len, int flags);
+extern int close(int s);
 #endif
