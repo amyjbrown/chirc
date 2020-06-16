@@ -35,7 +35,7 @@ typedef struct {
 } Buffer;
 
 
-socket_t TCPServer();
+socket_t TCPServer(char* port);
 socket_t TCPConnection();
 
 bool TCPEnd(socket_t socket);

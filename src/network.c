@@ -6,9 +6,38 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netdb.h>
+#include <string.h>
 
 #include "log.h"
 #include "network.h"
+
+socket_t TCPServer(char* port) {
+    socket_t server;
+    struct addrinfo hints; // hints for getadddrinfo()
+    struct addrinfo* servinfo; // pointer to results
+    struct addrinfo* pointer;
+
+    // Initialize hints 
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;
+    
+    int status;
+
+    if ((status = getaddrinfo(NULL, port, &hints, &servinfo )) != 0){
+        chilog(ERROR, "getaddrinfo() error: %s\n", gai_strerror(status));
+    }
+
+    for (pointer = servinfo; pointer != NULL; pointer = pointer->ai_next) {
+
+    }
+
+    // final stuff to do
+    freeaddrinfo(servinfo);
+
+    return server;
+}
 
 
 
