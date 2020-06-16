@@ -35,7 +35,7 @@ typedef struct {
 } Buffer;
 
 // TCP create connections
-socket_t TCPServer(char* port);
+socket_t TCPServer(const char* port);
 socket_t TCPConnection();
 
 // TCP sendall information

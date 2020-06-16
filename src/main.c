@@ -44,8 +44,8 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "log.h"`
-
+#include "log.h"
+#include "server.h"
 
 
 int main(int argc, char *argv[])
@@ -133,6 +133,8 @@ int main(int argc, char *argv[])
     /* Your code goes here */
 
     // Start Server::ServerLoop
+
+    server_loop();
 
     return 0;
 }
