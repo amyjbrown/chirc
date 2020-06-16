@@ -5,9 +5,13 @@
 *  This describes the format for creating a more structured message format froma  raw message
 */
 
-#ifndef CHIRCH_MESSAGE_H
+#ifndef CHIRC_MESSAGE_H_
+#define CHIRC_MESSAGE_H_
+
+#include <stdbool.h>
+
 /*
-*  Message
+*  RawMessage
 *   
 *  Structured format for looking at a message 
 *  
@@ -24,6 +28,39 @@ typedef struct {
     char* command;
     int paramc;
     char** paramv;
+    char* final;
+} RawMessage; 
+
+typedef enum {
+    MTNick,
+    MTUser
+} MsgType;
+
+#define MSG_IS(msg, type) (msg.header == type)
+
+typedef struct {
+    MsgType type;
 } Message;
+
+
+typedef struct {
+    Message header;
+    char* user;
+    char* mode;
+    char* realname;
+} UserMsg;
+
+
+typedef struct {
+    Message header;
+    char* nick;
+} NickMsg;
+
+//Takes a string-buffer and parses it into resulting RawMessage out
+//Returns bool to signify success or failure
+//TODO: set it to ErrorEnum later
+bool RawMsgLex(char* string, RawMessage* out);
+RawMessage* RawMsgInit(RawMessage* rm);
+bool MsgParse(RawMessage* rm, Message* out);
 
 #endif
