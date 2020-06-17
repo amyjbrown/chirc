@@ -27,7 +27,7 @@ socket_t TCPServer(char* port) {
     int status;
 
     if ((status = getaddrinfo(NULL, port, &hints, &servinfo )) != 0){
-        chilog(ERROR, "TCPServer() getaddrinfo() error: %s", gai_strerror(status));
+        chilog(ERROR, "TCPServer: getaddrinfo() error: %s", gai_strerror(status));
     }
 
     // This will iterate over the linked list in servinfo and bind to the appropriate one
@@ -35,13 +35,13 @@ socket_t TCPServer(char* port) {
     for (ptr = servinfo; ptr != NULL; ptr = ptr->ai_next) {
         // Try to connect to server, continue if this is invalid
         if ((server = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol))== -1) {
-            chilog(DEBUG, "TCPServer() failed socket() attempt, retrying");
+            chilog(DEBUG, "TCPServer: failed socket() attempt, retrying");
             continue;
         }
 
         // If socket sucessfuly initiated, then try and bind it to the gotten information
         if (bind(server, ptr->ai_addr, ptr->ai_addrlen) == -1) {
-            chilog(DEBUG, "TCPServer() failed bind() attempt, retrying");
+            chilog(DEBUG, "TCPServer: failed bind() attempt, retrying");
             close(server);
             continue;
         }
@@ -85,7 +85,7 @@ socket_t TCPServer(char* port) {
 bool TCPSend(socket_t socket, Buffer* message) {
     // Short circuits
     if (message->length == 0) {
-        chilog(DEBUG, "TCPSend() socket %d: message is 0-bytes long");
+        chilog(DEBUG, "TCPSend: message is 0-bytes long");
         return false;
     }
     
@@ -96,7 +96,7 @@ bool TCPSend(socket_t socket, Buffer* message) {
     
     //Send data until it ends
     while (remaining != 0) {
-        chilog(DEBUG, "TCPSend() socket %d: sending from %d-length message at position %d",
+        chilog(DEBUG, "TCPSend: socket %d: sending from %d-length message at position %d",
                 socket,
                 message->length,
                 position);
@@ -104,11 +104,12 @@ bool TCPSend(socket_t socket, Buffer* message) {
         result = send(socket, data, message->length, 0);
         
         if (result == -1){
-            chilog(ERROR, "Client socket: %d had an error", socket);
+            // todo check for errors, maybe with a Static message
+            chilog(ERROR, "TCPSend: Client socket: %d had an error", socket);
             return false;
         }
 
-        chilog(DEBUG, "TCPSend() socket %d: successfuly sent %d bytes", socket, result);
+        chilog(DEBUG, "TCPSend: socket %d: successfuly sent %d bytes", socket, result);
     // Set information for next iteration
 
         remaining -= result;

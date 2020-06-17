@@ -21,7 +21,7 @@ void server_loop() {
     socket_t client;
 
     if ((server = TCPServer("6660")) == -1) {
-        chilog(CRITICAL, "server_loop() unable to intiate socket");
+        chilog(CRITICAL, "server_loop: unable to intiate socket");
         exit(EXIT_FAILURE);
     }
 
@@ -30,12 +30,13 @@ void server_loop() {
 
     client = accept(server, (struct sock_addr*) &their_addr, &addr_size);
     if (client == -1) {
-        chilog(CRITICAL, "server_loop() unable to established client connection");
+        chilog(CRITICAL, "server_loop: unable to established client connection");
         close(server);
         exit(EXIT_FAILURE);
     }
 
     // Now
+    char print_buffer[1024] = {0};
     char buffer[512] = {0};
     Buffer sendbuf; 
     sendbuf.length=0;
@@ -43,9 +44,9 @@ void server_loop() {
     int current = 0;
     for (;;){
         current = recv(client, buffer, 512,0);
-        if (current = -1) {
-            chilog(DEBUG, "server_loop() got error on recv()");
-            continue;
+        if (current == -1) {
+            chilog(ERROR, "server_loop: got error on recv()");
+            return;
         }
         //Sucessfuly send the info
         sendbuf.length = current;

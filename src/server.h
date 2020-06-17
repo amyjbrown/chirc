@@ -7,6 +7,7 @@
 
 
 #ifndef CHIRC_SERVER_H_
+#define CHIRC_SERVER_H_
 
 void main_loop();
 

@@ -4,7 +4,8 @@
  * 
  * Types:
  *  socket_t: an alias for an int to represent a socket fd
- *  Buffer: a variable length struct used to hold information for sending messages;
+ *  Buffer: a variable length struct used to hold information for sending messages
+ *              TODO make it into it's own header file
  * 
  * Functions:
  *  TCPServer(): a function that creates a socket_fd and connects it to a given Host and Port;
@@ -34,8 +35,10 @@ typedef struct {
     char* content; // Data
 } Buffer;
 
+
+void fuck(void);
 // TCP create connections
-socket_t TCPServer(const char* port);
+socket_t TCPServer(char* port);
 socket_t TCPConnection();
 
 // TCP sendall information
