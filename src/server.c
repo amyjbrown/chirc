@@ -37,6 +37,7 @@ void server_loop() {
 
     // Now
     char print_buffer[1024] = {0};
+    // just setting up for printing
     char buffer[512] = {0};
     Buffer sendbuf; 
     sendbuf.length=0;
@@ -48,10 +49,17 @@ void server_loop() {
             chilog(ERROR, "server_loop: got error on recv()");
             return;
         }
+
+        chilog(DEBUG, "server_loop: recieved %d bytes from socket %d", current, client);
+        chilog(DEBUG, "server_loop: message:\"%s\"", buffer);
         //Sucessfuly send the info
         sendbuf.length = current;
         sendbuf.content = buffer;
-        TCPSend(client, &sendbuf);
+        if(! TCPSend(client, &sendbuf)){
+            chilog(ERROR, "server_loop: client appears to have closed or other error");
+            close(client); close(server);
+            return;
+        }
         
         // Now, zero out the appropriate fields
         sendbuf.length=0; 
