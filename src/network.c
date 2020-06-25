@@ -135,4 +135,5 @@ bool TCPRecv(socket_t conn, Buffer* out) {
         return false;
     }
     out->length = result;
+    return true;
 }
