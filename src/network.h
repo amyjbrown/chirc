@@ -26,14 +26,9 @@
 #include <stdbool.h>
 #include <sys/types.h>
 
-typedef int socket_t;
+#include "buffer.h"
 
-// todo switch this to it's own header file?
-// Maybe a fn (s: [Char], out: &Buffer)->bool?
-typedef struct {
-    int length;     // Length of content[]
-    char* content; // Data
-} Buffer;
+typedef int socket_t;
 
 
 void fuck(void);
@@ -44,6 +39,9 @@ socket_t TCPConnection();
 // TCP sendall information
 bool TCPSend(socket_t socket, Buffer* message);
 
+//TCP recv info and store it into a buffer, overriding it's contents
+//how much data was recieved is stored into out.length
+bool TCPRecv(socket_t conn, Buffer* out);
 //Convnience access to various standard functions
 extern ssize_t recv(int s, void *buf, size_t len, int flags);
 extern ssize_t send(int s, const void *buf, size_t len, int flags);

@@ -84,7 +84,7 @@ socket_t TCPServer(char* port) {
 
 bool TCPSend(socket_t socket, Buffer* message) {
     // Short circuits
-    if (message->length == 0) {
+    if (message->length == 0 || message->capacity == 0) {
         chilog(DEBUG, "TCPSend: message is 0-bytes long");
         return false;
     }
@@ -92,7 +92,7 @@ bool TCPSend(socket_t socket, Buffer* message) {
     int remaining = message->length;
     int position = 0;
     int result=0;
-    char* data = message->content;
+    char* data = message->data;
     
     //Send data until it ends
     while (remaining != 0) {
@@ -119,4 +119,20 @@ bool TCPSend(socket_t socket, Buffer* message) {
 
     // Having finished sending all of our data, we return true
     return true;
+}
+
+bool TCPRecv(socket_t conn, Buffer* out) {
+    int result = 0;
+    
+    result = recv(conn, out->data, out->capacity, 0);
+    if (result == -1){
+        chilog(DEBUG, "TCPRecv: connection had no data");
+        return false;
+    }
+
+    if (result == 0){
+        chilog(ERROR, "TCPRecv: connection closed");
+        return false;
+    }
+    out->length = result;
 }

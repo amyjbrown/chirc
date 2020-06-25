@@ -41,11 +41,11 @@ void server_loop() {
     char buffer[512] = {0};
     Buffer sendbuf; 
     sendbuf.length=0;
-    sendbuf.content=NULL;
+    sendbuf.data=NULL;
     int current = 0;
     for (;;){
         current = recv(client, buffer, 512,0);
-        if (current == -1) {
+        if (current == -1 || current == 0) {
             chilog(ERROR, "server_loop: got error on recv()");
             return;
         }
@@ -54,7 +54,7 @@ void server_loop() {
         chilog(DEBUG, "server_loop: message:\"%s\"", buffer);
         //Sucessfuly send the info
         sendbuf.length = current;
-        sendbuf.content = buffer;
+        sendbuf.data = buffer;
         if(! TCPSend(client, &sendbuf)){
             chilog(ERROR, "server_loop: client appears to have closed or other error");
             close(client); close(server);
@@ -63,7 +63,7 @@ void server_loop() {
         
         // Now, zero out the appropriate fields
         sendbuf.length=0; 
-        sendbuf.content=NULL;
+        sendbuf.data=NULL;
         current = 0;
         memset(&buffer, 0, sizeof(buffer));
     }
